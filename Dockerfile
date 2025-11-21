@@ -1,8 +1,14 @@
-# Stage 1: Build the application
-FROM node:20-alpine AS build
+# ---------- Build stage ----------
+FROM node:20 AS build
 WORKDIR /app
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 RUN npm ci
+
 COPY . .
 RUN npm run build
 FROM nginx:1.25-alpine
